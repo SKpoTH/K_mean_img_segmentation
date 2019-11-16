@@ -1,3 +1,4 @@
+%%cu
 #include <cmath>
 #include <stdio.h>
 #include <stdlib.h>
@@ -54,20 +55,26 @@ void hsv_k_mean(int *output_cluster, int K, float *old_cluster,
 }
 
 int main(){
-
     // Host Allocate
     // --- K
     int K = 3;
 
     // --- Height & Width
-    int height = 1000;
-    int width = 1000;
+    int width, height;
+    scanf("%d %d", &width, &height);
+    int* image = new int[width * height];
 
     // --- Image
     unsigned int size_img = height * width * 3;
     unsigned int mem_size_img = sizeof(float) * size_img;
     float* h_img = (float*) malloc(mem_size_img);
     float* h_seg = (float*) malloc(mem_size_img);
+
+    // --- load image pixel value
+    int round = width * height;
+    for (int i = 0; i < round; i++) {
+        scanf("%d", &h_img[i]);
+    }
 
     // --- output
     unsigned int mem_size_output = sizeof(int) * size_img;
@@ -188,6 +195,27 @@ int main(){
         // printf("%d\n", h_count[i]);
         printf("[%f, %f, %f]\n", h_new[i*3 + 0], h_new[i*3 + 1], h_new[i*3 + 2]);
     }
+
+
+    // Get output
+    for(int i=0 ; i<height ; i++){
+        for(int j=0 ; j<width ; j++){
+            h_seg[i*width + j*3 + 0] = h_new[h_output[i*width + j]*3 + 0];
+            h_seg[i*width + j*3 + 1] = h_new[h_output[i*width + j]*3 + 1];
+            h_seg[i*width + j*3 + 2] = h_new[h_output[i*width + j]*3 + 2];
+        }
+    }
+
+    // Send output out
+    printf("%d %d\n", height, width);
+    for(int i=0 ; i<height ; i++) {
+        for(int j=0 ; j<width ; j++) {
+            for(int k=0 ; k<3 ; k++){
+              printf("%d\n", h_seg[i*width + j*3 + k]);   
+            }
+        }
+    }
+
 
     // Free All data
     free(h_img);      cudaFree(d_img);
