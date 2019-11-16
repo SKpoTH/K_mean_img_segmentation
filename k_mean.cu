@@ -61,8 +61,7 @@ int main(){
 
     // --- Height & Width
     int width, height;
-    scanf("%d %d", &width, &height);
-    int* image = new int[width * height];
+    scanf("%d %d", &height, &width);
 
     // --- Image
     unsigned int size_img = height * width * 3;
@@ -71,7 +70,7 @@ int main(){
     float* h_seg = (float*) malloc(mem_size_img);
 
     // --- load image pixel value
-    int round = width * height;
+    int round = height * width * 3;
     for (int i = 0; i < round; i++) {
         scanf("%d", &h_img[i]);
     }
